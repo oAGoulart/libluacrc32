@@ -1,5 +1,7 @@
+build/
 .vscode
 *.o
 *.so
 *.dll
 *.lua
+*.x
