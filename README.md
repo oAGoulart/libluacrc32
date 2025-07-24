@@ -1,6 +1,6 @@
 # libluacrc32
 
-Lua library to generate 32-bits cyclic redundancy checks. Currently, only one method can be built at a time.
+Lua library to generate 32-bits cyclic redundancy checks.
 
 **Methods available:**
 - [x] ISO-HDLC
