@@ -1,16 +1,10 @@
-if [ $# -ne 1 ]; then
-  crc=1
-else
-  crc=$1
-fi
-
 targ='libluacrc32'
 
 gcc -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 \
-    -fPIC -DCRC_METHOD=$crc --std=c11 -g0 -O3 -c $targ.c
+    -fPIC $CFLAGS --std=c11 -O2 -c $targ.c
 
-if [ $(echo '$OS') = 'Windows_NT' ]; then
-  gcc $targ.o -o $targ.dll -lm -shared
+if [ "$(printenv 'OS')" = 'Windows_NT' ]; then
+  gcc -shared -lm -o $targ.dll $targ.o $LFLAGS -llua54
 else
-  gcc $targ.o -o $targ.so -lm -shared
+  gcc -shared -lm -o $targ.so $targ.o $LFLAGS
 fi
