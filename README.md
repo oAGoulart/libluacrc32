@@ -15,7 +15,8 @@ Lua library to generate 32-bits cyclic redundancy checks. Currently, only one me
 Compile with gcc or use `build.sh` script. If on Windows, use `CFLAGS` and `LFLAGS` to set include and library paths, respectively.
 
 ```sh
-env CFLAGS=-IC:/Users/a_gou/scoop/apps/lua/5.4.7-2/include LFLAGS=-LC:/Users/a_gou/scoop/apps/lua/5.4.7-2/bin ./build.sh
+env CFLAGS=-IC:/Users/a_gou/scoop/apps/lua/5.4.7-2/include \
+    LFLAGS=-LC:/Users/a_gou/scoop/apps/lua/5.4.7-2/bin ./build.sh
 ```
 
 **NOTE:** If you want to use MSVC, you are on your own, sorry.
