@@ -3,12 +3,12 @@
 Lua library to generate 32-bits cyclic redundancy checks.
 
 **Methods available:**
-- [x] ISO-HDLC
-- [x] ISCSI
-- [ ] JAMCRC
-- [ ] MPEG-2
-- [ ] BZIP2
-- [ ] CD-ROM-EDC
+1. ISO-HDLC
+1. ISCSI
+1. JAMCRC
+1. MPEG-2
+1. BZIP2
+1. CD-ROM-EDC
 
 ## Usage
 

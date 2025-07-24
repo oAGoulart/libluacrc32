@@ -6,7 +6,7 @@
 
 #define NUM_METHODS 6
 
-extern const uint32_t crc32lt[2][256];
+extern const uint32_t crc32lt[4][256];
 
 static const char* options_[NUM_METHODS + 1] = {
   "ISO-HDLC", "ISCSI", "BZIP2", "JAMCRC", "MPEG-2", "CD-ROM-EDC", NULL
@@ -16,6 +16,10 @@ enum options_e {
   ISO_HDLC, ISCSI, BZIP2, JAMCRC, MPEG_2, CD_ROM_EDC
 };
 
+static const uint8_t index_[NUM_METHODS] = {
+  0, 1, 2, 0, 2, 3
+};
+
 static int
 l_calculate_(lua_State* L)
 {
@@ -23,7 +27,7 @@ l_calculate_(lua_State* L)
   const char* data = luaL_checklstring(L, 1, &l);
   uint8_t method = (uint8_t)luaL_checkoption(L, 2, "ISO-HDLC", options_);
 
-	const uint32_t* lookup = crc32lt[method];
+	const uint32_t* lookup = crc32lt[index_[method]];
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wuninitialized"
 	uint32_t crc;
