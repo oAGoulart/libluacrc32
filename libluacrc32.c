@@ -12,10 +12,6 @@ static const char* options_[NUM_METHODS + 1] = {
   "ISO-HDLC", "ISCSI", "BZIP2", "JAMCRC", "MPEG-2", "CD-ROM-EDC", NULL
 };
 
-enum options_e {
-  ISO_HDLC, ISCSI, BZIP2, JAMCRC, MPEG_2, CD_ROM_EDC
-};
-
 static const uint8_t index_[NUM_METHODS] = {
   0, 1, 2, 0, 2, 3
 };
