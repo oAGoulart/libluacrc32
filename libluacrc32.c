@@ -113,27 +113,31 @@ l_calculate(lua_State* L)
 {
   size_t l;
   const char* data = luaL_checklstring(L, 1, &l);
-  const int method = luaL_checkoption(L, 2, "ISO-HDLC", options_);
+  uint8_t method = (uint8_t)luaL_checkoption(L, 2, "ISO-HDLC", options_);
 
-	const uint32_t* looktup = tables_[method];
+	const uint32_t* lookup = tables_[method];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wuninitialized"
 	uint32_t crc;
   uint8_t invert;
-  __asm__ ("cmp %0, 4\n\t"
-           "ja crc\n\t"
-           "mov %1, 0xFFFFFFFF\n\t"
-           "cmp %0, 3\n\t"
-           "jb invert\n\t"
-           "jmp noinvert\n\t"
-           "invert:\n\t"
-           "mov %%al, 1\n\t"
-           "jmp fin\n\t"
-           "crc:\n\t"
-           "xor %1, %1\n\t"
-           "noinvert:\n\t"
-           "xor %%al, %%al\n\t"
-           "fin:\n\t"
-           : "=r" (method), "=r" (crc), "=c" (invert)
-           : "0" (crc));
+  __asm__ ("cmpb $4, %%al\n\t"
+           "ja 2f\n\t"
+           "movl $0xFFFFFFFF, %1\n\t"
+           "cmpb $3, %%al\n\t"
+           "jb 1f\n\t"
+           "jmp 3f\n"
+           "1:\n\t"
+           "movb $1, %2\n\t"
+           "jmp 4f\n"
+           "2:\n\t"
+           "xorl %1, %1\n"
+           "3:\n\t"
+           "xorb %2, %2\n"
+           "4:"
+           : "+a" (method), "=r" (crc), "=r" (invert)
+           : "1" (crc), "2" (invert)
+           : "cc");
+#pragma GCC diagnostic pop
 
   size_t i = 0;
 	for (; i < l; i++)
@@ -144,19 +148,17 @@ l_calculate(lua_State* L)
     case ISCSI:
     case JAMCRC:
     case CD_ROM_EDC:
-      crc = looktup[(uint8_t)crc ^ data[i]] ^ (crc >> 8);
+      crc = lookup[(uint8_t)crc ^ data[i]] ^ (crc >> 8);
       break;
     default:
-      crc = looktup[(crc >> 24) ^ data[i]] ^ (crc << 8);
+      crc = lookup[(uint8_t)(crc >> 24) ^ data[i]] ^ (crc << 8);
       break;
     }
   }
-  __asm__ ("test %%al, %%al\n\t"
-           "jz pushi\n\t"
-           "xor %1, 0xFFFFFFFF\n\t"
-           "pushi:\n\t"
-           : "=c" (invert), "=r" (crc)
-           : "c" (invert));
+  if (invert)
+  {
+    crc ^= 0xFFFFFFFF;
+  }
   lua_pushinteger(L, crc);
   return 1;
 }
