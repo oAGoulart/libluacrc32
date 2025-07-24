@@ -51,20 +51,17 @@ l_calculate_(lua_State* L)
           : "cc");
 #pragma GCC diagnostic pop
 
+  const uint8_t reflect = method & 1 || !method;
   size_t i = 0;
-	for (; i < l; i++)
+  for (; i < l; i++)
   {
-    switch (method)
+    if (reflect)
     {
-    case ISO_HDLC:
-    case ISCSI:
-    case JAMCRC:
-    case CD_ROM_EDC:
       crc = lookup[(uint8_t)crc ^ data[i]] ^ (crc >> 8);
-      break;
-    default:
+    }
+    else
+    {
       crc = lookup[(uint8_t)(crc >> 24) ^ data[i]] ^ (crc << 8);
-      break;
     }
   }
   if (invert)
