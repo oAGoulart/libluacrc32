@@ -1,5 +1,5 @@
 # libluacrc32
-[![Static Badge](https://img.shields.io/badge/ISO%2FIEC-18004%3A2002-red)](https://www.iso.org/standard/37010.html)
+[![Static Badge](https://img.shields.io/badge/ISO%2FIEC-13239%3A2002-red)](https://www.iso.org/standard/37010.html)
 [![GitHub Release](https://img.shields.io/github/v/release/oagoulart/libluacrc32?color=green)](https://github.com/oAGoulart/libluacrc32/releases)
 [![GitHub License](https://img.shields.io/github/license/oagoulart/libluacrc32)](https://github.com/oAGoulart/libluacrc32/tree/master?tab=MS-RL-1-ov-file)
 [![Static Badge](https://img.shields.io/badge/Lua-5.4-green?logo=lua)](https://www.lua.org/download.html)
