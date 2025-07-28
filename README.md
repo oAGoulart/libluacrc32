@@ -4,7 +4,7 @@ Lua library to generate 32-bits cyclic redundancy checks.
 
 **Methods available:**
 1. ISO-HDLC
-1. ISCSI
+1. ISCSI (supports SSE 4.2 on r64 and r32)
 1. JAMCRC
 1. MPEG-2
 1. BZIP2

@@ -16,36 +16,77 @@ static const uint8_t index_[NUM_METHODS] = {
   0, 1, 2, 0, 2, 3
 };
 
+static uint8_t
+has_sse42_(void)
+{
+  static uint8_t sse42 = 0xFF;
+  __asm__("cmpb $0xFF, %0\n\t"
+          "jnz 2f\n\t"
+          "movl $1, %%eax\n\t"
+          "cpuid\n\t"
+          "andl $0x100000, %%ecx\n\t"
+          "jz 1f\n\t"
+          "movb $1, %0\n\t"
+          "jmp 2f\n"
+          "1:\n\t"
+          "xorb %0, %0\n"
+          "2:\n\t"
+          : "=d" (sse42)
+          : "0" (sse42)
+          : "eax", "ebx", "ecx");
+  return sse42;
+}
+
+#ifdef __amd64__
+#define CRCDST_TYPE uint64_t
+#else
+#define CRCDST_TYPE uint32_t
+#endif
+static __inline__ uint32_t
+crc32sse42_(const uint8_t* data, const size_t l)
+{
+  uint8_t remain = l % sizeof(CRCDST_TYPE);
+  CRCDST_TYPE crc = UINT32_MAX;
+  size_t i = 0;
+  for(; i < l; i += sizeof(CRCDST_TYPE))
+  {
+    CRCDST_TYPE* p = (CRCDST_TYPE*)&data[i];
+    __asm__("crc32 %1, %0\n\t" : "+r" (crc) : "r" (*p));
+  }
+  for(i = 0; i < remain; i++)
+  {
+    uint8_t* p = (uint8_t*)&data[i];
+    __asm__("crc32b %1, %0\n\t" : "+r" (crc) : "r" (*p));
+  }
+  return ~(uint32_t)crc;
+}
+
 static int
 l_calculate_(lua_State* L)
 {
   size_t l;
-  const char* data = luaL_checklstring(L, 1, &l);
+  const uint8_t* data = (uint8_t*)luaL_checklstring(L, 1, &l);
   uint8_t method = (uint8_t)luaL_checkoption(L, 2, "ISO-HDLC", options_);
+  if (method == 1 && has_sse42_())
+  {
+    lua_pushinteger(L, crc32sse42_(data, l));
+    return 1;
+  }
 
 	const uint32_t* lookup = crc32lt[index_[method]];
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wuninitialized"
-	uint32_t crc;
-  uint8_t invert;
+	uint32_t crc = 0;
+  uint8_t invert = 0;
   __asm__("cmpb $4, %%al\n\t"
           "ja 2f\n\t"
           "movl $0xFFFFFFFF, %1\n\t"
           "cmpb $3, %%al\n\t"
           "jb 1f\n\t"
-          "jmp 3f\n"
+          "jmp 2f\n"
           "1:\n\t"
           "movb $1, %2\n\t"
-          "jmp 4f\n"
-          "2:\n\t"
-          "xorl %1, %1\n"
-          "3:\n\t"
-          "xorb %2, %2\n"
-          "4:"
+          "2:\n"
           : "+a" (method), "=r" (crc), "=r" (invert)
-          : "1" (crc), "2" (invert)
-          : "cc");
-#pragma GCC diagnostic pop
+          : "1" (crc), "2" (invert));
 
   const uint8_t reflect = method & 1 || !method;
   size_t i = 0;
