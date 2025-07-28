@@ -1,7 +1,7 @@
 targ='libluacrc32'
 
 gcc -Wall -Wextra -Wpedantic -Wshadow -Wformat=2 \
-    -fPIC $CFLAGS --std=c11 -O2 -c lookup.c $targ.c
+    -fPIC $CFLAGS --std=c11 -O3 -c lookup.c $targ.c
 
 if [ "$(printenv 'OS')" = 'Windows_NT' ]; then
   gcc -shared -lm -o $targ.dll $targ.o lookup.o $LFLAGS -llua54

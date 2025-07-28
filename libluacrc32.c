@@ -16,7 +16,7 @@ static const uint8_t index_[NUM_METHODS] = {
   0, 1, 2, 0, 2, 3
 };
 
-static uint8_t
+static uint8_t __attribute__ ((const))
 has_sse42_(void)
 {
   static uint8_t sse42 = 0xFF;
@@ -73,21 +73,21 @@ l_calculate_(lua_State* L)
     return 1;
   }
 
-	const uint32_t* lookup = crc32lt[index_[method]];
-	uint32_t crc = 0;
+  uint32_t crc = 0;
   uint8_t invert = 0;
-  __asm__("cmpb $4, %%al\n\t"
+  __asm__("cmpb $4, %0\n\t"
           "ja 2f\n\t"
           "movl $0xFFFFFFFF, %1\n\t"
-          "cmpb $3, %%al\n\t"
+          "cmpb $3, %0\n\t"
           "jb 1f\n\t"
           "jmp 2f\n"
           "1:\n\t"
-          "movb $1, %2\n\t"
-          "2:\n"
+          "movb $1, %2\n"
+          "2:\n\t"
           : "+a" (method), "=r" (crc), "=r" (invert)
           : "1" (crc), "2" (invert));
 
+  const uint32_t* lookup = crc32lt[index_[method]];
   const uint8_t reflect = method & 1 || !method;
   size_t i = 0;
   for (; i < l; i++)
