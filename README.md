@@ -1,6 +1,10 @@
 # libluacrc32
+[![Static Badge](https://img.shields.io/badge/ISO%2FIEC-13239%3A2002-red)](https://www.iso.org/standard/37010.html)
+[![GitHub Release](https://img.shields.io/github/v/release/oagoulart/libluacrc32?color=green)](https://github.com/oAGoulart/libluacrc32/releases)
+[![GitHub License](https://img.shields.io/github/license/oagoulart/libluacrc32)](https://github.com/oAGoulart/libluacrc32/tree/master?tab=MS-RL-1-ov-file)
+[![Static Badge](https://img.shields.io/badge/Lua-5.4-green?logo=lua)](https://www.lua.org/download.html)
 
-Lua library to generate 32-bits cyclic redundancy checks.
+Lua 5.4 library to generate 32-bits cyclic redundancy checks. Code includes four pre-generated lookup tables for six different methods.
 
 **Methods available:**
 1. ISO-HDLC
@@ -12,7 +16,7 @@ Lua library to generate 32-bits cyclic redundancy checks.
 
 ## Usage
 
-Compile with gcc or use `build.sh` script. If on Windows, use `CFLAGS` and `LFLAGS` to set include and library paths, respectively.
+Binaries for AMD64 are available on [Releases](https://github.com/oAGoulart/libluacrc32/releases) page. For x86, compile with gcc or use `build.sh` script. If on Windows, use MinGW/MSYS2 with `CFLAGS` and `LFLAGS` set to include and library paths, respectively.
 
 ```sh
 env CFLAGS=-IC:/Users/a_gou/scoop/apps/lua/5.4.7-2/include \
