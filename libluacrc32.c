@@ -12,6 +12,7 @@ static const char* options_[NUM_METHODS + 1] = {
   "ISO-HDLC", "ISCSI", "BZIP2", "JAMCRC", "MPEG-2", "CD-ROM-EDC", NULL
 };
 
+// NOTE: some options share the same lookup table
 static const uint8_t index_[NUM_METHODS] = {
   0, 1, 2, 0, 2, 3
 };
@@ -21,7 +22,7 @@ has_sse42_(void)
 {
   static uint8_t sse42 = 0xFF;
   __asm__("cmpb $0xFF, %0\n\t"
-          "jnz 2f\n\t"
+          "jne 2f\n\t"
           "movl $1, %%eax\n\t"
           "cpuid\n\t"
           "andl $0x100000, %%ecx\n\t"
@@ -37,7 +38,7 @@ has_sse42_(void)
   return sse42;
 }
 
-#ifdef __amd64__
+#ifdef __LP64__
 #define CRCDST_TYPE uint64_t
 #else
 #define CRCDST_TYPE uint32_t
@@ -64,7 +65,7 @@ crc32sse42_(const uint8_t* data, const size_t l)
 static int
 l_calculate_(lua_State* L)
 {
-  size_t l;
+  size_t l = 0;
   const uint8_t* data = (uint8_t*)luaL_checklstring(L, 1, &l);
   uint8_t method = (uint8_t)luaL_checkoption(L, 2, "ISO-HDLC", options_);
   if (method == 1 && has_sse42_())
@@ -76,14 +77,12 @@ l_calculate_(lua_State* L)
   uint32_t crc = 0;
   uint8_t invert = 0;
   __asm__("cmpb $4, %0\n\t"
-          "ja 2f\n\t"
+          "ja 1f\n\t"
           "movl $0xFFFFFFFF, %1\n\t"
-          "cmpb $3, %0\n\t"
-          "jb 1f\n\t"
-          "jmp 2f\n"
-          "1:\n\t"
+          "cmpb $2, %0\n\t"
+          "ja 1f\n\t"
           "movb $1, %2\n"
-          "2:\n\t"
+          "1:\n\t"
           : "+a" (method), "=r" (crc), "=r" (invert)
           : "1" (crc), "2" (invert));
 
