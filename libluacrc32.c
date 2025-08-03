@@ -1,5 +1,4 @@
 #include <stdint.h>
-#include <stdio.h>
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
@@ -31,7 +30,7 @@ has_sse42_(void)
           "jmp 2f\n"
           "1:\n\t"
           "xorb %0, %0\n"
-          "2:\n\t"
+          "2:"
           : "=d" (sse42)
           : "0" (sse42)
           : "eax", "ebx", "ecx");
@@ -52,12 +51,12 @@ crc32sse42_(const uint8_t* data, const size_t l)
   for(; i < l; i += sizeof(CRCDST_TYPE))
   {
     CRCDST_TYPE* p = (CRCDST_TYPE*)&data[i];
-    __asm__("crc32 %1, %0\n\t" : "+r" (crc) : "r" (*p));
+    __asm__("crc32 %1, %0" : "+r" (crc) : "r" (*p));
   }
   for(i = 0; i < remain; i++)
   {
     uint8_t* p = (uint8_t*)&data[i];
-    __asm__("crc32b %1, %0\n\t" : "+r" (crc) : "r" (*p));
+    __asm__("crc32b %1, %0" : "+r" (crc) : "r" (*p));
   }
   return ~(uint32_t)crc;
 }
@@ -82,7 +81,7 @@ l_calculate_(lua_State* L)
           "cmpb $2, %0\n\t"
           "ja 1f\n\t"
           "movb $1, %2\n"
-          "1:\n\t"
+          "1:"
           : "+a" (method), "=r" (crc), "=r" (invert)
           : "1" (crc), "2" (invert));
 
