@@ -20,20 +20,20 @@ static uint8_t __attribute__ ((const))
 has_sse42_(void)
 {
   static uint8_t sse42 = 0xFF;
-  __asm__("cmpb $0xFF, %0\n\t"
+  __asm__("cmpb $0xFF, %%al\n\t"
           "jne 2f\n\t"
           "movl $1, %%eax\n\t"
           "cpuid\n\t"
           "andl $0x100000, %%ecx\n\t"
           "jz 1f\n\t"
-          "movb $1, %0\n\t"
+          "movb $1, %%al\n\t"
           "jmp 2f\n"
           "1:\n\t"
-          "xorb %0, %0\n"
+          "xorb %%al, %%al\n"
           "2:"
-          : "=d" (sse42)
+          : "=a" (sse42)
           : "0" (sse42)
-          : "eax", "ebx", "ecx");
+          : "ebx", "ecx", "edx");
   return sse42;
 }
 
@@ -75,10 +75,10 @@ l_calculate_(lua_State* L)
 
   uint32_t crc = 0;
   uint8_t invert = 0;
-  __asm__("cmpb $4, %0\n\t"
+  __asm__("cmpb $4, %%al\n\t"
           "ja 1f\n\t"
           "movl $0xFFFFFFFF, %1\n\t"
-          "cmpb $2, %0\n\t"
+          "cmpb $2, %%al\n\t"
           "ja 1f\n\t"
           "movb $1, %2\n"
           "1:"
