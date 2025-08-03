@@ -113,7 +113,7 @@ static const struct luaL_Reg crc32[] = {
 };
 
 int
-luaopen_libluacrc32 (lua_State* L)
+luaopen_libluacrc32(lua_State* L)
 {
   luaL_newlib(L, crc32);
   return 1;
