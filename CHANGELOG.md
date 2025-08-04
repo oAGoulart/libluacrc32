@@ -4,6 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+- Fix ISCSI's SSE 4.2 overlapping calculation when `l == remain`
+
 ## [1.1.0] - 2025-08-01
 
 Add SSE 4.2 support

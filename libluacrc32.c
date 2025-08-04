@@ -48,15 +48,15 @@ crc32sse42_(const uint8_t* data, const size_t l)
   uint8_t remain = l % sizeof(CRCDST_TYPE);
   CRCDST_TYPE crc = UINT32_MAX;
   size_t i = 0;
-  for(; i < l; i += sizeof(CRCDST_TYPE))
+  for(; i < l - remain; i += sizeof(CRCDST_TYPE))
   {
     CRCDST_TYPE* p = (CRCDST_TYPE*)&data[i];
-    __asm__("crc32 %1, %0" : "+r" (crc) : "r" (*p));
+    __asm__ __volatile__("crc32 %1, %0" : "+r" (crc) : "r" (*p));
   }
   for(i = 0; i < remain; i++)
   {
     uint8_t* p = (uint8_t*)&data[i];
-    __asm__("crc32b %1, %0" : "+r" (crc) : "r" (*p));
+    __asm__ __volatile__("crc32b %1, %0" : "+r" (crc) : "r" (*p));
   }
   return ~(uint32_t)crc;
 }
@@ -101,7 +101,7 @@ l_calculate_(lua_State* L)
   }
   if (invert)
   {
-    crc ^= 0xFFFFFFFF;
+    crc ^= UINT32_MAX;
   }
   lua_pushinteger(L, crc);
   return 1;
