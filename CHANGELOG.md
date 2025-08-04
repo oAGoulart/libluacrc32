@@ -4,7 +4,11 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
-- Fix ISCSI's SSE 4.2 overlapping calculation when `l == remain`
+## [1.1.1] - 2025-08-04
+
+Fix ISCSI's SSE 4.2 overlapping calculation
+
+- Fixed ISCSI's SSE 4.2 overlapping calculation when `l == remain`
 
 ## [1.1.0] - 2025-08-01
 
@@ -18,6 +22,7 @@ Add SSE 4.2 support
 Initial release
 
 
-[Unreleased]: https://github.com/oAGoulart/libluacrc32/compare/v1.1.0..HEAD
+[Unreleased]: https://github.com/oAGoulart/libluacrc32/compare/v1.1.1..HEAD
+[1.1.1]: https://github.com/oAGoulart/libluacrc32/releases/tag/v1.1.1
 [1.1.0]: https://github.com/oAGoulart/libluacrc32/releases/tag/v1.1.0
 [1.0.0]: https://github.com/oAGoulart/libluacrc32/releases/tag/v1.0.0

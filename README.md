@@ -30,7 +30,8 @@ Then, require and call with a string to calculate its CRC. First and second argu
 ```lua
 local crc32 = require("libluacrc32")
 
-print(crc32.calculate("wrappem", "ISO-HDLC"))
+print(crc32.calculate("wrappem", "ISCSI"))
+-- output: 969553473
 ```
 
 **NOTE:** If the Lua code above fails with `module 'libluacrc32' not found` on Windows, add `package.cpath=".\\?.dll"` one line before `require` or change your `LUA_CPATH` environment variable to include `.\\?.dll`.
