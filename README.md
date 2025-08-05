@@ -14,7 +14,7 @@ Lua 5.4 library to generate 32-bits cyclic redundancy checks. Code includes four
 1. BZIP2
 1. CD-ROM-EDC
 
-* _NOTE:_ preliminary tests performed only, further systematic tests required.
+\* _NOTE:_ preliminary tests performed only, further systematic tests required.
 
 ## Usage
 
