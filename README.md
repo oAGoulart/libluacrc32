@@ -7,12 +7,14 @@
 Lua 5.5 library to generate 32-bits cyclic redundancy checks. Code includes four pre-generated lookup tables for six different methods.
 
 **Methods available:**
-1. ISO-HDLC
-1. ISCSI (supports SSE 4.2; aprox. 10x faster)
+1. ISO-HDLC (default; tested @ max. ~0.35 GB/s*)
+1. ISCSI (with SSE 4.2; tested @ max. ~5.3 GB/s*)
 1. JAMCRC
 1. MPEG-2
 1. BZIP2
 1. CD-ROM-EDC
+
+\* _NOTE:_ preliminary tests performed only, further systematic tests required.
 
 ## Usage
 
