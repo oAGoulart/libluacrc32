@@ -21,8 +21,8 @@ Lua 5.5 library to generate 32-bits cyclic redundancy checks. Code includes four
 Binaries for AMD64 are available on [Releases](https://github.com/oAGoulart/libluacrc32/releases) page. For x86, compile with gcc or use `build.sh` script. If on Windows, use MinGW/MSYS2 with `CFLAGS` and `LFLAGS` set to include and library paths, respectively.
 
 ```sh
-env CFLAGS=-IC:/Users/a_gou/scoop/apps/lua/5.4.7-2/include \
-    LFLAGS=-LC:/Users/a_gou/scoop/apps/lua/5.4.7-2/bin ./build.sh
+env CFLAGS=-IC:/msys64/usr/local/include \
+    LFLAGS=-LC:/msys64/usr/local/bin ./build.sh
 ```
 
 **NOTE:** If you want to use MSVC, you are on your own, sorry.
